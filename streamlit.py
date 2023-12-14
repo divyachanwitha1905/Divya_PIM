@@ -21,7 +21,7 @@ def download_file(url, filename):
         f.write(response.content)
 
 # Replace 'url_to_your_model_file' with the actual URL of your model file
-download_file('https://drive.google.com/file/d/17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG/view?usp=drive_link', 'best.pt')
+download_file('https://drive.google.com/file/d/17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG/uc?export=download', 'best.pt')
 
 # Load the model
 model = YOLO('best.pt')
