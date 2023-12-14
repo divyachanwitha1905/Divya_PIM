@@ -7,10 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1tA3CeLbXJgDPuykOE3KhJPQMW77eMOkx
 """
 
-pip install streamlit
-
-!pip install ultralytics
-
 from google.colab import drive
 drive.mount('/content/gdrive')
 
