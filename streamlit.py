@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 14 18:51:26 2023
+Created on Thu Dec 14 20:30:47 2023
 
 @author: DELL
 """
@@ -11,24 +11,16 @@ from PIL import Image
 import torchvision.transforms as T
 import requests
 from ultralytics import YOLO
-import gdown
-
-def download_file(url, filename):
-    gdown.download(url, filename, quiet=False)
-
-# Replace 'id_of_your_model_file' with the actual ID of your model file
-download_file('https://drive.google.com/uc?id=18vfcRbw3hkaggwGvforcPVXHA1CYTz-8', 'best.pt')
-
 
 # Function to download the model file
 def download_file(url, filename):
     headers = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=headers)
-    print(response.content[:100])  # Print the first 100 characters of the response content
     with open(filename, 'wb') as f:
         f.write(response.content)
 
-
+# Download the model file
+download_file('https://drive.google.com/uc?id=18vfcRbw3hkaggwGvforcPVXHA1CYTz-8', 'best.pt')
 
 # Load the model
 model = YOLO('best.pt')
@@ -49,7 +41,7 @@ def predict(image):
 
     # Process the outputs
     threshold = 0.5
-    outputs = [output for output in outputs if output[4] > threshold]
+    outputs = [output for output in outputs if len(output) > 4 and output[4] > threshold]
 
     # Count the number of objects detected
     counts = len(outputs)
@@ -66,5 +58,3 @@ if uploaded_file is not None:
     st.write("Detecting...")
     counts = predict(image)
     st.write(f"Detected {counts} steel pipes.")
-
-                    
