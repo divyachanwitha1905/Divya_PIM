@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 14 16:18:14 2023
+Created on Thu Dec 14 17:25:01 2023
 
 @author: DELL
 """
@@ -9,15 +9,20 @@ import streamlit as st
 import torch
 from PIL import Image
 import torchvision.transforms as T
-
+import requests
 from ultralytics import YOLO
 
+# Function to download the model file
+def download_file(url, filename):
+    response = requests.get(url)
+    with open(filename, 'wb') as f:
+        f.write(response.content)
 
-from ultralytics import YOLO
-model = YOLO(r"C:\Users\DELL\OneDrive\Documents\best.pt")
+# Replace 'url_to_your_model_file' with the actual URL of your model file
+download_file('https://drive.google.com/file/d/17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG/view?usp=drive_link', 'best.pt')
 
-
-
+# Load the model
+model = YOLO('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
@@ -34,8 +39,6 @@ def predict(image):
         outputs = model(image)
 
     # Process the outputs
-    # The outputs are in the format (x1, y1, x2, y2, object_confidence, class_score, class_pred)
-    # You'll need to apply a threshold to the object_confidence
     threshold = 0.5
     outputs = [output for output in outputs if output[4] > threshold]
 
@@ -43,7 +46,6 @@ def predict(image):
     counts = len(outputs)
 
     return counts
-
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
