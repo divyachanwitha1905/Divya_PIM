@@ -7,9 +7,6 @@ Original file is located at
     https://colab.research.google.com/drive/1tA3CeLbXJgDPuykOE3KhJPQMW77eMOkx
 """
 
-from google.colab import drive
-drive.mount('/content/gdrive')
-
 import streamlit as st
 import torch
 from PIL import Image
@@ -19,7 +16,7 @@ from ultralytics import YOLO
 
 
 from ultralytics import YOLO
-model = YOLO('/content/gdrive/My Drive/best.pt')
+model = YOLO('"C:\Users\DELL\OneDrive\Documents\best.pt"')
 
 
 
