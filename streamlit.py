@@ -14,7 +14,9 @@ from ultralytics import YOLO
 
 # Function to download the model file
 def download_file(url, filename):
-    response = requests.get(url)
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, headers=headers)
+    print(response.content[:100])  # Print the first 100 characters of the response content
     with open(filename, 'wb') as f:
         f.write(response.content)
 
@@ -57,3 +59,5 @@ if uploaded_file is not None:
     st.write("Detecting...")
     counts = predict(image)
     st.write(f"Detected {counts} steel pipes.")
+
+                    
