@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec 15 11:43:51 2023
+Created on Fri Dec 15 13:50:42 2023
 
 @author: DELL
 """
@@ -9,7 +9,7 @@ import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics import YOLO
+from ultralytics.yolov5.models.yolo import Model
 import pandas as pd
 import gdown
 import requests
@@ -67,6 +67,3 @@ if uploaded_file is not None:
     st.write(f"Detected {counts} steel pipes.")
     df = pd.DataFrame({'Label': labels})
     st.table(df)
-
-   
-
