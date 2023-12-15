@@ -6,7 +6,9 @@ Created on Fri Dec 15 14:13:03 2023
 """
 
 
+import subprocess
 
+subprocess.check_call(["python", '-m', 'pip', 'install', 'ultralytics'])
 
 import streamlit as st
 import torch
