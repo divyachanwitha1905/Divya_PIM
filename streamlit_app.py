@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Fri Dec 15 09:51:18 2023
-
-@author: DELL
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Dec 14 20:30:47 2023
+Created on Fri Dec 15 11:43:51 2023
 
 @author: DELL
 """
@@ -24,12 +17,19 @@ import gdown
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
+
+# Function to download the model file
+def download_file(url, filename):
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    response = requests.get(url, headers=headers)
+    with open(filename, 'wb') as f:
+        f.write(response.content)
+
 # Download the model file
 download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
-
-model = MyYOLOv8()  # Initialize model
-model.load_state_dict(torch.load('best.pt'))  # Load weights
+# Load the model
+model = YOLO('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
