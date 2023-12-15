@@ -11,11 +11,12 @@ Created on Thu Dec 14 20:30:47 2023
 
 @author: DELL
 """
+
 import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics import YOLO
+from ultralytics.yolov5 import YOLOv5
 import pandas as pd
 import gdown
 
@@ -26,10 +27,8 @@ def download_file(url, filename):
 # Download the model file
 download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
-
-
 # Load the model
-model = YOLO('best.pt')
+model = YOLOv5('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
@@ -37,26 +36,19 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
-
 def predict(image):
     # Transform the image
     image_tensor = transform(image).unsqueeze(0)
 
     # Perform inference
     with torch.no_grad():
-        outputs = model(image_tensor)
-
-    # Process the outputs
-    threshold = 0.5
-    outputs = [output for output in outputs if output[4] > threshold]
+        results = model(image_tensor)
 
     # Draw bounding boxes on the image and get labels
     labels = []
-    for output in outputs:
+    for output in results.xyxy[0]:
         # Get the coordinates
         x1, y1, x2, y2 = output[:4]
-        # Scale the coordinates to the size of the image
-        x1, y1, x2, y2 = x1 * image.width, y1 * image.height, x2 * image.width, y2 * image.height
         # Draw the bounding box
         draw = ImageDraw.Draw(image)
         draw.rectangle([(x1, y1), (x2, y2)], outline ="red")
@@ -64,10 +56,9 @@ def predict(image):
         labels.append(output[-1])
 
     # Count the number of objects detected
-    counts = len(outputs)
+    counts = len(results.xyxy[0])
 
     return counts, labels, image
-
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
@@ -83,4 +74,5 @@ if uploaded_file is not None:
     df = pd.DataFrame({'Label': labels})
     st.table(df)
 
+   
 
