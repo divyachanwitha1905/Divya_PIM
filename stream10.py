@@ -24,7 +24,8 @@ def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
 # Download the model file
-download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')  
+download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
+
 
 
 # Load the model
