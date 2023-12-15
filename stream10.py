@@ -27,8 +27,9 @@ def download_file(url, filename):
 # Download the model file
 download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
-# Load the model
-model = YOLO('best.pt')
+
+model = MyYOLOv8()  # Initialize model
+model.load_state_dict(torch.load('best.pt'))  # Load weights
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
