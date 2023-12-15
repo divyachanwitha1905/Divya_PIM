@@ -5,6 +5,7 @@ Created on Fri Dec 15 13:50:42 2023
 @author: DELL
 """
 
+
 import streamlit as st
 import torch
 from PIL import Image, ImageDraw
