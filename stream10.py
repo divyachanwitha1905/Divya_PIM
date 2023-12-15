@@ -28,7 +28,7 @@ def download_file(url, filename):
 download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
 # Load the model
-model = YOLOv5('best.pt')
+model = YOLO('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
