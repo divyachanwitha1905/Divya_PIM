@@ -4,9 +4,8 @@ Created on Fri Dec 15 14:13:03 2023
 
 @author: DELL
 """
-pip install ultralytics
 
-pip install git+https://github.com/ultralytics/ultralytics.git@main
+
 
 
 import streamlit as st
