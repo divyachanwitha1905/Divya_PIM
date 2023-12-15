@@ -9,27 +9,20 @@ import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics import YOLO
+from ultralytics.yolov5.models.yolo import Model
 import pandas as pd
 import gdown
+import requests
 
 # Function to download the model file
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
-
-# Function to download the model file
-def download_file(url, filename):
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers)
-    with open(filename, 'wb') as f:
-        f.write(response.content)
-
 # Download the model file
 download_file('https://drive.google.com/uc?id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
 # Load the model
-model = YOLO('best.pt')
+model = Model('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
