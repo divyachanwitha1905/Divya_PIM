@@ -9,7 +9,7 @@ import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics.yolov5 import YOLOv5
+from ultralytics.yolov8 import YOLOv8
 import pandas as pd
 import gdown
 
