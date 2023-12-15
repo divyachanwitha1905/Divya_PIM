@@ -11,6 +11,10 @@ import subprocess
 subprocess.check_call(["python", '-m', 'pip', 'install', 'ultralytics'])
 
 import streamlit as st
+from PIL import ImageDraw
+import pandas as pd
+
+
 import torch
 from PIL import Image
 import torchvision.transforms as T
@@ -39,26 +43,31 @@ transform = T.Compose([T.Resize(256),
 def predict(image):
     # Transform the image
     image_tensor = transform(image).unsqueeze(0)
-
+    
     # Perform inference
     with torch.no_grad():
         results = model(image_tensor)
-
+    
     # Draw bounding boxes on the image and get labels
     labels = []
-    for output in results.xyxy[0]:
-        # Get the coordinates
-        x1, y1, x2, y2 = output[:4]
-        # Draw the bounding box
-        draw = ImageDraw.Draw(image)
-        draw.rectangle([(x1, y1), (x2, y2)], outline ="red")
-        # Get the label
-        labels.append(output[-1])
-
+    for result in results:
+        for *xyxy, conf, cls in result:
+            # Get the coordinates
+            x1, y1, x2, y2 = xyxy
+            
+            # Draw the bounding box
+            draw = ImageDraw.Draw(image)
+            draw.rectangle([(x1, y1), (x2, y2)], outline ="red")
+            
+            # Get the label
+            labels.append(cls)
+    
     # Count the number of objects detected
-    counts = len(results.xyxy[0])
-
+    counts = len(results)
+    
     return counts, labels, image
+
+
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
