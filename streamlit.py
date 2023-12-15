@@ -57,15 +57,16 @@ def predict(image):
             
             # Draw the bounding box
             draw = ImageDraw.Draw(image)
-            draw.rectangle([(x1, y1), (x2, y2)], outline ="red")
+            draw.rectangle([(x1.item(), y1.item()), (x2.item(), y2.item())], outline ="red")
             
             # Get the label
-            labels.append(cls)
+            labels.append(cls.item())
     
     # Count the number of objects detected
     counts = len(results)
     
     return counts, labels, image
+
 
 
 
