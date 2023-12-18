@@ -44,6 +44,8 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 def predict(image):
+    # Initialize results
+    results = None
     # Add a print statement to check the type and length of results.pred
     print(type(results.pred), len(results.pred))
     
