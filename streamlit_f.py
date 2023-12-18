@@ -15,11 +15,13 @@ from ultralytics import YOLO
 import gdown
 
 # Function to download the model file
+
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
-# Replace 'url_to_your_model_file' with the actual URL of your model file
-download_file('https://drive.google.com/uc?id=17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG', 'best.pt')
+# Replace 'direct_download_link' with your direct download link
+download_file('https://drive.google.com/file/d/1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i/view?usp=sharing', 'best.pt')
+
 
 # Load the model
 model = YOLO('best.pt')
