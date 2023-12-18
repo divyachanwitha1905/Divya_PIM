@@ -53,13 +53,13 @@ def predict(image):
 
     # Process the outputs
     threshold = 0.5
-    outputs = results.pred[0]  # Get the predictions
-    outputs = [output for output in outputs if output[4] > threshold]
+    outputs = [output for output in results if output[4] > threshold]
 
     # Count the number of objects detected
     counts = len(outputs)
 
     return counts, outputs
+
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
