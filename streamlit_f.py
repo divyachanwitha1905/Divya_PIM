@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Dec 14 17:25:01 2023
+Created on Mon Dec 18 11:01:12 2023
 
 @author: DELL
 """
+
 
 import streamlit as st
 import torch
@@ -11,17 +12,14 @@ from PIL import Image
 import torchvision.transforms as T
 import requests
 from ultralytics import YOLO
+import gdown
 
 # Function to download the model file
 def download_file(url, filename):
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    response = requests.get(url, headers=headers)
-    print(response.content[:100])  # Print the first 100 characters of the response content
-    with open(filename, 'wb') as f:
-        f.write(response.content)
+    gdown.download(url, filename, quiet=False)
 
 # Replace 'url_to_your_model_file' with the actual URL of your model file
-download_file('https://drive.google.com/file/d/17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG/view?usp=drive_link', 'best.pt')
+download_file('https://drive.google.com/uc?id=17YzOXPx31Tte4d-r5FaIiBnfpa0yRByG', 'best.pt')
 
 # Load the model
 model = YOLO('best.pt')
@@ -38,26 +36,26 @@ def predict(image):
 
     # Perform inference
     with torch.no_grad():
-        outputs = model(image)
+        results = model(image)
 
     # Process the outputs
     threshold = 0.5
+    outputs = results.pred[0]  # Get the predictions
     outputs = [output for output in outputs if output[4] > threshold]
 
     # Count the number of objects detected
     counts = len(outputs)
 
-    return counts
+    return counts, outputs
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
 uploaded_file = st.file_uploader("Choose an image...", type="jpg")
 if uploaded_file is not None:
-    Image.open(uploaded_file).convert('RGB')
+    image = Image.open(uploaded_file).convert('RGB')
     st.image(image, caption='Uploaded Image.', use_column_width=True)
     st.write("")
     st.write("Detecting...")
-    counts = predict(image)
+    counts, outputs = predict(image)
     st.write(f"Detected {counts} steel pipes.")
-
-                    
+    st.write(f"Labels: {outputs}")
