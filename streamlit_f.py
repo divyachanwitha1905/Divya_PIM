@@ -44,21 +44,20 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 def predict(image):
-    # Transform the image
-    image = transform(image).unsqueeze(0)
-
-    # Perform inference
-    with torch.no_grad():
-        results = model(image)
-
-    # Process the outputs
-    threshold = 0.5
+    # Add a print statement to check the type and length of results.pred
+    print(type(results.pred), len(results.pred))
+    
+    # If results.pred is a list or a similar iterable, print its contents
+    if isinstance(results.pred, (list, tuple, set, np.ndarray)):
+        for i, output in enumerate(results.pred):
+            print(f"Output {i}: {output}")
+    
+    # Check the value of threshold
+    print(f"Threshold: {threshold}")
+    
     outputs = [output for output in results.pred if output[4] > threshold]
+    return outputs
 
-    # Count the number of objects detected
-    counts = len(outputs)
-
-    return counts, outputs
 
 
 
