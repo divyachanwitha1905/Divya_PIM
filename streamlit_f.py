@@ -42,7 +42,6 @@ transform = T.Compose([T.Resize(256),
                        T.CenterCrop(224),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
-
 def predict(image):
     # Transform the image
     image = transform(image).unsqueeze(0)
@@ -53,12 +52,13 @@ def predict(image):
 
     # Process the outputs
     threshold = 0.5
-    outputs = [output for output in results if output[4] > threshold]
+    outputs = [output for output in results.predictions if output.confidence > threshold]
 
     # Count the number of objects detected
     counts = len(outputs)
 
     return counts, outputs
+
 
 
 # Streamlit code to create the interface
