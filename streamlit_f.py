@@ -13,14 +13,30 @@ import torchvision.transforms as T
 import requests
 from ultralytics import YOLO
 import gdown
+import os
 
 # Function to download the model file
-
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
 # Replace 'direct_download_link' with your direct download link
-download_file('https://drive.google.com/file/d/1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i/view?usp=sharing', 'best.pt')
+download_file('https://colab.research.google.com/drive/1_WRWfTkg8swCDWVQPeOH4XX-m8dM4wnJ?usp=sharing', 'best.pt')
+
+# Check if the model file exists and is a valid PyTorch model file
+if os.path.exists('best.pt'):
+    try:
+        torch.load('best.pt')
+        st.write("Model file is valid.")
+    except Exception as e:
+        st.write(f"Error loading model file: {e}")
+else:
+    st.write("Model file not found.")
+
+# Load the model
+model = YOLO('best.pt')
+
+# Rest of your Streamlit code...
+
 
 
 # Load the model
