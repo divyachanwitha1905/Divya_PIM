@@ -52,7 +52,7 @@ def predict(image):
 
     # Process the outputs
     threshold = 0.5
-    outputs = [output for output in results.predictions if output.confidence > threshold]
+    outputs = [output for output in results.pred if output[4] > threshold]
 
     # Count the number of objects detected
     counts = len(outputs)
