@@ -20,7 +20,7 @@ def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
 # Replace 'direct_download_link' with your direct download link
-download_file('https://colab.research.google.com/drive/1_WRWfTkg8swCDWVQPeOH4XX-m8dM4wnJ?usp=sharing', 'best.pt')
+download_file('https://drive.google.com/uc?id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i', 'best.pt')
 
 # Check if the model file exists and is a valid PyTorch model file
 if os.path.exists('best.pt'):
@@ -35,12 +35,7 @@ else:
 # Load the model
 model = YOLO('best.pt')
 
-# Rest of your Streamlit code...
 
-
-
-# Load the model
-model = YOLO('best.pt')
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
