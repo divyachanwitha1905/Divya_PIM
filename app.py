@@ -80,9 +80,13 @@ def draw_boxes(image, outputs):
 def predict(image):
     # Convert PIL Image to PyTorch Tensor
     image_tensor = transform(image).unsqueeze(0)
-    
-    # Perform prediction using the model
+  
+  # Perform prediction using the model
     results = model(image_tensor)
+  
+  # Print the results to inspect their structure
+    print(results)
+    
     
     # Check if results is a list or a similar iterable
     if isinstance(results, (list, tuple, set, np.ndarray)):
