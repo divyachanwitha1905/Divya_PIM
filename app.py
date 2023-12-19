@@ -48,20 +48,30 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
+
+
 def draw_boxes(image, outputs):
     # Create a draw object
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
     for output in outputs:
-        print(f"Output: {output}")  # Add this line
-        coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:-1]), 2)]
-        print(f"Coordinates: {coordinates}")  # Add this line
+        # Assuming output is a list where the first 8 elements are polygon coordinates
+        # and the last element is the label
+        coordinates = output[:-1]
+        label = output[-1]
+        
+        # Convert coordinates to integers
+        coordinates = [int(coordinate) for coordinate in coordinates]
+        
+        # Reshape coordinates into (x, y) pairs if necessary
+        coordinates = [(coordinates[i], coordinates[i + 1]) for i in range(0, len(coordinates), 2)]
+        
+        # Draw the polygon and label on the image
         draw.polygon(coordinates, outline="red")
-        draw.text(coordinates[0], str(output[-1]))  # coordinates[0] should be the top-left corner of the polygon
+        draw.text(coordinates[0], str(label))  # coordinates[0] should be the top-left corner of the polygon
     
     return image
-
 
 
 
