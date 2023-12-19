@@ -54,12 +54,15 @@ def draw_boxes(image, outputs):
     
     # Iterate over the outputs
     for output in outputs:
+        # Reshape the coordinates into (x, y) pairs
+        coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:8]), 2)]
+        
         # Draw a polygon on the image for each output
-        # Assuming each output is a tuple of (x1, y1, x2, y2, x3, y3, x4, y4, label)
-        draw.polygon(output[:8], outline="red")
+        draw.polygon(coordinates, outline="red")
         draw.text(output[:2], output[8])
     
     return image
+
 
 
 def predict(image):
