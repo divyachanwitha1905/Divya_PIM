@@ -48,7 +48,7 @@ def predict(image):
     results = model(image)
     
     # Now you can print and use results.pred
-    print(type(results.pred), len(results.pred))
+    print(type(results), len(results))
 
     
     # If results.pred is a list or a similar iterable, print its contents
