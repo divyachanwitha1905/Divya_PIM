@@ -75,6 +75,9 @@ def predict(image):
     # Perform prediction using the model
     results = model(image_tensor)
     
+    # Print the results to inspect their structure
+    print(results)
+    
     # Extract the detections from the Results object
     detections = results.pred[0] if len(results.pred) > 0 else []
     
