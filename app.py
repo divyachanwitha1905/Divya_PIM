@@ -69,12 +69,13 @@ def draw_boxes(image, outputs):
     return image
 
 def predict(image):
+    
     # Convert PIL Image to PyTorch Tensor
     image_tensor = transform(image).unsqueeze(0)
-    
+   
     # Perform prediction using the model
     results = model(image_tensor)
-    
+   
     # Print the results to inspect their structure
     print(results)
     
