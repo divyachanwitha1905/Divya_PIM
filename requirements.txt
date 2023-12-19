@@ -4,7 +4,7 @@ torch==2.1.2
 torchvision==0.16.2
 Pillow==10.1.0
 ultralytics
-ultralytics.yolo
+
 opencv-python-headless==4.8.1.78
 gdown==3.13.0
 requests==2.28.1
