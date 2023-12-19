@@ -22,7 +22,7 @@ def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
 
 # Replace 'direct_download_link' with your direct download link
-download_file('https://drive.google.com/uc?id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i', 'best.pt')
+download_file('https://drive.google.com/uc?id=11FZjWoJ7Zybd-TYCy2trHw8b9wPJc168', 'best.pt')
 
 # Check if the model file exists and is a valid PyTorch model file
 if os.path.exists('best.pt'):
