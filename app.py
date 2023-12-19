@@ -49,59 +49,42 @@ transform = T.Compose([T.Resize(256),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 
-
 def draw_boxes(image, outputs):
     # Create a draw object
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
     for output in outputs:
-        # Assuming output is a list where the first 8 elements are polygon coordinates
-        # and the last element is the label
-        coordinates = output[:-1]
-        label = output[-1]
+        # Get the bounding box coordinates and label
+        coordinates = output[:4]
+        label = output[4]
         
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
         
-        # Reshape coordinates into (x, y) pairs if necessary
-        coordinates = [(coordinates[i], coordinates[i + 1]) for i in range(0, len(coordinates), 2)]
-        
-        # Draw the polygon and label on the image
-        draw.polygon(coordinates, outline="red")
-        draw.text(coordinates[0], str(label))  # coordinates[0] should be the top-left corner of the polygon
+        # Draw the bounding box and label on the image
+        draw.rectangle(coordinates, outline="red")
+        draw.text(coordinates[:2], str(label))  # coordinates[:2] should be the top-left corner of the bounding box
     
     return image
-
-
-
-
 
 def predict(image):
     # Convert PIL Image to PyTorch Tensor
     image_tensor = transform(image).unsqueeze(0)
-  
-  # Perform prediction using the model
+    
+    # Perform prediction using the model
     results = model(image_tensor)
-  
-  # Print the results to inspect their structure
-    print(results)
     
-    
-    # Check if results is a list or a similar iterable
-    if isinstance(results, (list, tuple, set, np.ndarray)):
-        # Process the results here
-        counts = len(results)
-        outputs = results
-    else:
-        print(f"Unexpected result type: {type(results)}")
-        counts = 0
-        outputs = []
+    # Extract the detections from the Results object
+    detections = results.pred[0] if len(results.pred) > 0 else []
     
     # Draw boxes on the original image
-    image_with_boxes = draw_boxes(image, outputs)
+    image_with_boxes = draw_boxes(image, detections)
     
-    return counts, outputs, image_with_boxes
+    return len(detections), detections, image_with_boxes
+
+
+
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
