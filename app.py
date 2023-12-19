@@ -21,7 +21,7 @@ from ultralytics import YOLO
 import gdown
 import os
 import numpy as np
-
+from PIL import Image
 # Function to download the model file
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
@@ -69,13 +69,12 @@ def draw_boxes(image, outputs):
     return image
 
 def predict(image):
-    
     # Convert PIL Image to PyTorch Tensor
     image_tensor = transform(image).unsqueeze(0)
-   
+    
     # Perform prediction using the model
     results = model(image_tensor)
-   
+    
     # Print the results to inspect their structure
     print(results)
     
@@ -85,7 +84,32 @@ def predict(image):
     # Draw boxes on the original image
     image_with_boxes = draw_boxes(image, detections)
     
-    return len(detections), detections, image_with_boxes
+    return len(detections), detections, image_with_boxes, results
+
+from PIL import Image
+
+# Open an image file
+image = Image.open(r"C:\Users\DELL\OneDrive\Desktop\train\images\IMG_3785_MOV-15_jpg.rf.e9642284a6f719b2458b793675c1e803.jpg")
+
+
+
+# Use the function and print results
+counts, outputs, image_with_boxes, results = predict(image)
+print(type(results))
+
+import pyarrow
+print(pyarrow.__version__)
+
+
+
+import traceback
+
+try:
+    # Some code that raises an error
+    print(results)
+except Exception as e:
+    traceback.print_exc()
+
 
 
 
