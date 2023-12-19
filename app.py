@@ -55,11 +55,11 @@ def draw_boxes(image, outputs):
     # Iterate over the outputs
     for output in outputs:
         # Reshape the coordinates into (x, y) pairs
-        coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:8]), 2)]
+        coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:4]), 2)]
         
         # Draw a polygon on the image for each output
         draw.polygon(coordinates, outline="red")
-        draw.text(output[:2], output[8])
+        draw.text(output[:2], output[4])
     
     return image
 
