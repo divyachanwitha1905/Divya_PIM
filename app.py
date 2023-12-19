@@ -1,15 +1,20 @@
 # -*- coding: utf-8 -*-
 """
+Created on Tue Dec 19 14:19:34 2023
+
+@author: DELL
+"""
+
+# -*- coding: utf-8 -*-
+"""
 Created on Mon Dec 18 11:01:12 2023
 
 @author: DELL
 """
 
-
-
 import streamlit as st
 import torch
-from PIL import Image
+from PIL import Image, ImageDraw
 import torchvision.transforms as T
 import requests
 from ultralytics import YOLO
@@ -37,17 +42,32 @@ else:
 # Load the model
 model = YOLO('best.pt')
 
-
-
 # Define the transformation
 transform = T.Compose([T.Resize(256),
                        T.CenterCrop(224),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
+def draw_boxes(image, outputs):
+    # Create a draw object
+    draw = ImageDraw.Draw(image)
+    
+    # Iterate over the outputs
+    for output in outputs:
+        # Draw a polygon on the image for each output
+        # Assuming each output is a tuple of (x1, y1, x2, y2, x3, y3, x4, y4, label)
+        draw.polygon(output[:8], outline="red")
+        draw.text(output[:2], output[8])
+    
+    return image
+
+
 def predict(image):
+    # Convert PIL Image to PyTorch Tensor
+    image_tensor = transform(image).unsqueeze(0)
+    
     # Perform prediction using the model
-    results = model(image)
+    results = model(image_tensor)
     
     # Check if results is a list or a similar iterable
     if isinstance(results, (list, tuple, set, np.ndarray)):
@@ -59,11 +79,10 @@ def predict(image):
         counts = 0
         outputs = []
     
-    return counts, outputs
-
-
-
-
+    # Draw boxes on the original image
+    image_with_boxes = draw_boxes(image, outputs)
+    
+    return counts, outputs, image_with_boxes
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
@@ -73,6 +92,7 @@ if uploaded_file is not None:
     st.image(image, caption='Uploaded Image.', use_column_width=True)
     st.write("")
     st.write("Detecting...")
-    counts, outputs = predict(image)
+    counts, outputs, image_with_boxes = predict(image)
+    st.image(image_with_boxes, caption='Detected Image.', use_column_width=True)
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
