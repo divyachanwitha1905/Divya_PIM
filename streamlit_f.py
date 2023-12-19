@@ -15,6 +15,7 @@ import requests
 from ultralytics import YOLO
 import gdown
 import os
+import numpy as np
 
 # Function to download the model file
 def download_file(url, filename):
