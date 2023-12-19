@@ -86,21 +86,6 @@ def predict(image):
     
     return len(detections), detections, image_with_boxes, results
 
-from PIL import Image
-
-# Open an image file
-image = Image.open(r"C:\Users\DELL\OneDrive\Desktop\train\images\IMG_3785_MOV-15_jpg.rf.e9642284a6f719b2458b793675c1e803.jpg")
-
-
-
-# Use the function and print results
-counts, outputs, image_with_boxes, results = predict(image)
-print(type(results))
-
-import pyarrow
-print(pyarrow.__version__)
-
-
 
 import traceback
 
@@ -109,10 +94,6 @@ try:
     print(results)
 except Exception as e:
     traceback.print_exc()
-
-
-
-
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
