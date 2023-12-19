@@ -54,19 +54,14 @@ def draw_boxes(image, outputs):
     
     # Iterate over the outputs
     for output in outputs:
-        # Assuming output is a list where the first 8 elements are polygon coordinates
-        # and the last element is the label
-        coordinates = output[:-1]
-        label = output[-1]
-        
-        # Reshape coordinates into (x, y) pairs if necessary
-        coordinates = [(coordinates[i], coordinates[i + 1]) for i in range(0, len(coordinates), 2)]
-        
-        # Draw the polygon and label on the image
+        print(f"Output: {output}")  # Add this line
+        coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:-1]), 2)]
+        print(f"Coordinates: {coordinates}")  # Add this line
         draw.polygon(coordinates, outline="red")
-        draw.text(coordinates[0], str(label))  # coordinates[0] should be the top-left corner of the polygon
+        draw.text(coordinates[0], str(output[-1]))  # coordinates[0] should be the top-left corner of the polygon
     
     return image
+
 
 
 
