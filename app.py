@@ -56,6 +56,7 @@ def draw_boxes(image, outputs):
     for output in outputs:
         print(f"Output: {output}")  # Add this line
         coordinates = [(output[i], output[i + 1]) for i in range(0, len(output[:4]), 2)]
+        print(f"Coordinates: {coordinates}")
         draw.polygon(coordinates, outline="red")
         draw.text(output[:2], output[4])
     
