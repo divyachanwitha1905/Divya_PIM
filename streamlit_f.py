@@ -43,24 +43,23 @@ transform = T.Compose([T.Resize(256),
                        T.CenterCrop(224),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
 def predict(image):
     # Perform prediction using the model
     results = model(image)
     
-    # Now you can print and use results.pred
-    print(type(results), len(results))
+    # Check if results is a list or a similar iterable
+    if isinstance(results, (list, tuple, set, np.ndarray)):
+        # Process the results here
+        counts = len(results)
+        outputs = results
+    else:
+        print(f"Unexpected result type: {type(results)}")
+        counts = 0
+        outputs = []
+    
+    return counts, outputs
 
-    
-    # If results.pred is a list or a similar iterable, print its contents
-    if isinstance(results.pred, (list, tuple, set, np.ndarray)):
-        for i, output in enumerate(results.pred):
-            print(f"Output {i}: {output}")
-    
-    # Check the value of threshold
-    print(f"Threshold: {threshold}")
-    
-    outputs = [output for output in results.pred if output[4] > threshold]
-    return outputs
 
 
 
