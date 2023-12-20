@@ -53,7 +53,7 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
-    for output in outputs.xyxy[0]:
+    for output in outputs:
         # Get the bounding box coordinates
         coordinates = output[:4]
         
