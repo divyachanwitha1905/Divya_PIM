@@ -16,12 +16,12 @@ import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-import requests
 from ultralytics import YOLO
 import gdown
 import os
 import numpy as np
 from PIL import Image
+
 # Function to download the model file
 def download_file(url, filename):
     gdown.download(url, filename, quiet=False)
@@ -48,9 +48,6 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
-
-from PIL import ImageDraw
-
 def draw_polygons(image, outputs):
     # Create a draw object
     draw = ImageDraw.Draw(image)
@@ -73,45 +70,29 @@ def draw_polygons(image, outputs):
     
     return image
 
-def predict():
-    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
-    if uploaded_file is not None:
-        image = Image.open(uploaded_file).convert('RGB')
-        
-        # Convert PIL Image to PyTorch Tensor
-        image_tensor = transform(image).unsqueeze(0)
-        
-        # Perform prediction using the model
-        results = model(image_tensor)
-        
-        # Print the type of results immediately
-        print(f"Type of results: {type(results)}")
-        
-        # Extract the detections from the Results object
-        if isinstance(results, list):
-            detections = results[0] if len(results) > 0 else []
-        elif isinstance(results, torch.Tensor):
-            detections = results.tolist()
-        else:
-            print(f"Unexpected type of results: {type(results)}")
-            detections = []
-        
-        # Draw polygons on the original image
-        image_with_boxes = draw_polygons(image, detections)
-        
-        return len(detections), detections, image_with_boxes
-
-
-
-
-
-import traceback
-
-try:
-    # Some code that raises an error
-    print(results)
-except Exception as e:
-    traceback.print_exc()
+def predict(image):
+    # Convert PIL Image to PyTorch Tensor
+    image_tensor = transform(image).unsqueeze(0)
+    
+    # Perform prediction using the model
+    results = model(image_tensor)
+    
+    # Print the type of results immediately
+    print(f"Type of results: {type(results)}")
+    
+    # Extract the detections from the Results object
+    if isinstance(results, list):
+        detections = results[0] if len(results) > 0 else []
+    elif isinstance(results, torch.Tensor):
+        detections = results.tolist()
+    else:
+        print(f"Unexpected type of results: {type(results)}")
+        detections = []
+    
+    # Draw polygons on the original image
+    image_with_boxes = draw_polygons(image, detections)
+    
+    return len(detections), detections, image_with_boxes
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
@@ -125,4 +106,3 @@ if uploaded_file is not None:
     st.image(image_with_boxes, caption='Detected Image.', use_column_width=True)
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
-
