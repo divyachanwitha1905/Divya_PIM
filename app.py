@@ -57,7 +57,7 @@ def draw_polygons(image, outputs):
         print(f"Output: {output}")
         # Get the bounding box coordinates and label
         coordinates = output[:4]
-        label = output[4]
+        
         
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
