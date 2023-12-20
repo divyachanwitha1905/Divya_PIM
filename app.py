@@ -114,5 +114,3 @@ if uploaded_file is not None:
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
 
-
-print(type(results))
