@@ -11,7 +11,6 @@ Created on Mon Dec 18 11:01:12 2023
 
 @author: DELL
 """
-
 import streamlit as st
 import torch
 from PIL import Image, ImageDraw
@@ -78,7 +77,7 @@ def predict(image):
     # Draw polygons on the original image
     image_with_boxes = draw_polygons(image, results)
     
-    return len(results.xyxy[0]), results, image_with_boxes
+    return len(results), results, image_with_boxes
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
@@ -92,3 +91,4 @@ if uploaded_file is not None:
     st.image(image_with_boxes, caption='Detected Image.', use_column_width=True)
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
+
