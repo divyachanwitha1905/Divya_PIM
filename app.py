@@ -52,12 +52,9 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
-    for output in outputs:
-        # Get the bounding box coordinates
-        coordinates = output[:4]
-        
+    for output in outputs.xyxy[0]:  # Access the bounding box coordinates
         # Convert coordinates to integers
-        coordinates = [int(coordinate) for coordinate in coordinates]
+        coordinates = [int(coordinate) for coordinate in output[:4]]
         
         # Create a polygon from the bounding box coordinates
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
@@ -66,6 +63,7 @@ def draw_polygons(image, outputs):
         draw.polygon(polygon, outline="red")
     
     return image
+
 
 def predict(image):
     # Convert PIL Image to PyTorch Tensor
