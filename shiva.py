@@ -9,7 +9,7 @@ import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics.yolov5 import YOLO  # Assuming you're using YOLOv5 from Ultralytics
+from ultralytics import YOLO  # Assuming you're using YOLOv5 from Ultralytics
 import gdown
 import os
 
