@@ -73,24 +73,36 @@ def draw_polygons(image, outputs):
     
     return image
 
+def predict():
+    uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+    if uploaded_file is not None:
+        image = Image.open(uploaded_file).convert('RGB')
+        
+        # Convert PIL Image to PyTorch Tensor
+        image_tensor = transform(image).unsqueeze(0)
+        
+        # Perform prediction using the model
+        results = model(image_tensor)
+        
+        # Print the type of results immediately
+        print(f"Type of results: {type(results)}")
+        
+        # Extract the detections from the Results object
+        if isinstance(results, list):
+            detections = results[0] if len(results) > 0 else []
+        elif isinstance(results, torch.Tensor):
+            detections = results.tolist()
+        else:
+            print(f"Unexpected type of results: {type(results)}")
+            detections = []
+        
+        # Draw polygons on the original image
+        image_with_boxes = draw_polygons(image, detections)
+        
+        return len(detections), detections, image_with_boxes
 
-def predict(image):
-    # Convert PIL Image to PyTorch Tensor
-    image_tensor = transform(image).unsqueeze(0)
-    
-    # Perform prediction using the model
-    results = model(image_tensor)
-    
-    # Print the results to inspect their structure
-    print(results)
-    
-    # Extract the detections from the Results object
-    detections = results.pred[0] if len(results.pred) > 0 else []
-    
-    # Draw polygons on the original image
-    image_with_boxes = draw_polygons(image, detections)
-    
-    return len(detections), detections, image_with_boxes, results
+
+
 
 
 import traceback
