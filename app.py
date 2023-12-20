@@ -53,11 +53,9 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
-    for output in outputs:
-        print(f"Output: {output}")
-        # Get the bounding box coordinates and label
+    for output in outputs.xyxy[0]:
+        # Get the bounding box coordinates
         coordinates = output[:4]
-        
         
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
@@ -65,9 +63,8 @@ def draw_polygons(image, outputs):
         # Create a polygon from the bounding box coordinates
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
         
-        # Draw the polygon and label on the image
+        # Draw the polygon on the image
         draw.polygon(polygon, outline="red")
-        draw.text(coordinates[:2], str(label))  # coordinates[:2] should be the top-left corner of the bounding box
     
     return image
 
@@ -78,22 +75,10 @@ def predict(image):
     # Perform prediction using the model
     results = model(image_tensor)
     
-    # Print the type of results immediately
-    print(f"Type of results: {type(results)}")
-    
-    # Extract the detections from the Results object
-    if isinstance(results, list):
-        detections = results[0] if len(results) > 0 else []
-    elif isinstance(results, torch.Tensor):
-        detections = results.tolist()
-    else:
-        print(f"Unexpected type of results: {type(results)}")
-        detections = []
-    
     # Draw polygons on the original image
-    image_with_boxes = draw_polygons(image, detections)
+    image_with_boxes = draw_polygons(image, results)
     
-    return len(detections), detections, image_with_boxes
+    return len(results.xyxy[0]), results, image_with_boxes
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
