@@ -87,8 +87,8 @@ def predict(image):
     # Extract the detections from the Results object
     detections = results.pred[0] if len(results.pred) > 0 else []
     
-    # Draw boxes on the original image
-    image_with_boxes = draw_boxes(image, detections)
+    # Draw polygons on the original image
+    image_with_boxes = draw_polygons(image, detections)
     
     return len(detections), detections, image_with_boxes, results
 
