@@ -52,9 +52,12 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     
     # Iterate over the outputs
-    for output in outputs.xyxy[0]:  # Access the bounding box coordinates
+    for output in outputs:  # outputs is a list
+        # Get the bounding box coordinates
+        coordinates = output[:4]  # assuming each output in the list is a list of coordinates
+        
         # Convert coordinates to integers
-        coordinates = [int(coordinate) for coordinate in output[:4]]
+        coordinates = [int(coordinate) for coordinate in coordinates]
         
         # Create a polygon from the bounding box coordinates
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
@@ -63,6 +66,7 @@ def draw_polygons(image, outputs):
         draw.polygon(polygon, outline="red")
     
     return image
+
 
 
 def predict(image):
