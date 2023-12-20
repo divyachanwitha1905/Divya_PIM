@@ -1,25 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Dec 19 14:19:34 2023
+Created on Wed Dec 20 18:16:18 2023
 
 @author: DELL
 """
 
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Dec 18 11:01:12 2023
-
-@author: DELL
-"""
 import streamlit as st
 import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
-from ultralytics import YOLO
+from ultralytics.yolov5 import YOLO  # Assuming you're using YOLOv5 from Ultralytics
 import gdown
 import os
-import numpy as np
-from PIL import Image
 
 # Function to download the model file
 def download_file(url, filename):
@@ -47,14 +39,14 @@ transform = T.Compose([T.Resize(256),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
-def draw_polygons(image, outputs):
+def draw_polygons(image, results):
     # Create a draw object
     draw = ImageDraw.Draw(image)
     
-    # Iterate over the outputs
-    for output in outputs:  # outputs is a list
-        # Get the bounding box coordinates
-        coordinates = output[:4]  # assuming each output in the list is a list of coordinates
+    # Iterate over the results
+    for result in results:  # outputs is a list of Results objects
+        # Access the bounding box coordinates
+        coordinates = result.xyxy[0][:4]  # assuming each result in the list is a Results object
         
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
@@ -66,8 +58,6 @@ def draw_polygons(image, outputs):
         draw.polygon(polygon, outline="red")
     
     return image
-
-
 
 def predict(image):
     # Convert PIL Image to PyTorch Tensor
@@ -93,4 +83,3 @@ if uploaded_file is not None:
     st.image(image_with_boxes, caption='Detected Image.', use_column_width=True)
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
-
