@@ -46,7 +46,7 @@ def draw_polygons(image, results):
     # Iterate over the results
     for result in results:  # Access the bounding box coordinates
         # Convert coordinates to integers
-        coordinates = [int(coordinate) for coordinate in result]
+        coordinates = [int(coordinate) for coordinate in result.box]
         
         # Create a polygon from the bounding box coordinates
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
