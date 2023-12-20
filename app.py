@@ -49,7 +49,9 @@ transform = T.Compose([T.Resize(256),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 
-def draw_boxes(image, outputs):
+from PIL import ImageDraw
+
+def draw_polygons(image, outputs):
     # Create a draw object
     draw = ImageDraw.Draw(image)
     
@@ -62,11 +64,15 @@ def draw_boxes(image, outputs):
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
         
-        # Draw the bounding box and label on the image
-        draw.rectangle(coordinates, outline="red")
+        # Create a polygon from the bounding box coordinates
+        polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
+        
+        # Draw the polygon and label on the image
+        draw.polygon(polygon, outline="red")
         draw.text(coordinates[:2], str(label))  # coordinates[:2] should be the top-left corner of the bounding box
     
     return image
+
 
 def predict(image):
     # Convert PIL Image to PyTorch Tensor
@@ -107,3 +113,6 @@ if uploaded_file is not None:
     st.image(image_with_boxes, caption='Detected Image.', use_column_width=True)
     st.write(f"Detected {counts} steel pipes.")
     st.write(f"Labels: {outputs}")
+
+
+print(type(results))
