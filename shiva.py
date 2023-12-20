@@ -44,7 +44,7 @@ def draw_polygons(image, results):
     draw = ImageDraw.Draw(image)
     
     # Iterate over the results
-    for result in results.boxes:  # Access the bounding box coordinates
+    for result in results:  # Access the bounding box coordinates
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in result]
         
