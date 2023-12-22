@@ -51,14 +51,16 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     for output in outputs:
         # Get the bounding box coordinates
-        coordinates = output.boxes.xyxy  # Use the xyxy attribute
-        # Convert coordinates to integers
-        coordinates = [int(coordinate) for coordinate in coordinates]
-        # Create a polygon from the bounding box coordinates
-        polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
-        # Draw the polygon on the image
-        draw.polygon(polygon, outline="red")
+        boxes = output.boxes.xyxy  # Use the xyxy attribute
+        for box in boxes:
+            # Convert coordinates to integers
+            coordinates = [int(coordinate) for coordinate in box]
+            # Create a polygon from the bounding box coordinates
+            polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
+            # Draw the polygon on the image
+            draw.polygon(polygon, outline="red")
     return image
+
 
 
 
