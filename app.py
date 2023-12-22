@@ -59,9 +59,10 @@ def draw_polygons(image, outputs):
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results = model(image_tensor)
-    outputs = results.xyxy[0]  # Get bounding boxes
-    image_with_boxes = draw_polygons(image, outputs)
-    return len(outputs), outputs, image_with_boxes
+    image_with_boxes = draw_polygons(image, results)
+    return len(results), results, image_with_boxes
+
+
 
 
 
