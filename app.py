@@ -51,7 +51,7 @@ def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     for output in outputs:
         # Get the bounding box coordinates
-        coordinates = output.boxes.tolist()  # Convert tensor to list
+        coordinates = output.boxes.xyxy  # Use the xyxy attribute
         # Convert coordinates to integers
         coordinates = [int(coordinate) for coordinate in coordinates]
         # Create a polygon from the bounding box coordinates
@@ -59,6 +59,7 @@ def draw_polygons(image, outputs):
         # Draw the polygon on the image
         draw.polygon(polygon, outline="red")
     return image
+
 
 
 def predict(image):
