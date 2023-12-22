@@ -48,38 +48,24 @@ transform = T.Compose([T.Resize(256),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
 def draw_polygons(image, outputs):
-    # Create a draw object
     draw = ImageDraw.Draw(image)
-    
-    # Iterate over the outputs
-    for output in outputs:  # outputs is a list
-        # Get the bounding box coordinates
-        coordinates = output[:4]  # assuming each output in the list is a list of coordinates
-        
-        # Convert coordinates to integers
+    for output in outputs:
+        coordinates = output[:4]
         coordinates = [int(coordinate) for coordinate in coordinates]
-        
-        # Create a polygon from the bounding box coordinates
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
-        
-        # Draw the polygon on the image
         draw.polygon(polygon, outline="red")
-    
     return image
 
-
-
 def predict(image):
-    # Convert PIL Image to PyTorch Tensor
     image_tensor = transform(image).unsqueeze(0)
-    
-    # Perform prediction using the model
     results = model(image_tensor)
-    
-    # Draw polygons on the original image
-    image_with_boxes = draw_polygons(image, results)
-    
-    return len(results), results, image_with_boxes
+    outputs = results.xyxy[0]  # Get bounding boxes
+    image_with_boxes = draw_polygons(image, outputs)
+    return len(outputs), outputs, image_with_boxes
+
+
+
+d
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
