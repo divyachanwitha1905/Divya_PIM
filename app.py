@@ -65,7 +65,7 @@ def predict(image):
 
 
 
-d
+
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
