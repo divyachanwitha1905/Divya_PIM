@@ -50,7 +50,7 @@ transform = T.Compose([T.Resize(256),
 def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
     for output in outputs:
-        coordinates = output[:4]
+        coordinates = output.get_coordinates()  # Get coordinates from Results object
         coordinates = [int(coordinate) for coordinate in coordinates]
         polygon = [(coordinates[0], coordinates[1]), (coordinates[2], coordinates[1]), (coordinates[2], coordinates[3]), (coordinates[0], coordinates[3])]
         draw.polygon(polygon, outline="red")
