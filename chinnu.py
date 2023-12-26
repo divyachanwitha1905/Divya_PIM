@@ -17,6 +17,7 @@ import gdown
 import os
 import pandas as pd
 import requests
+import torch
 
 # Function to obtain direct download link from Google Drive link
 def get_google_drive_direct_link(gdrive_url):
@@ -53,13 +54,15 @@ else:
 
 
 
-import torch
-
 # Load the model
 model = YOLO()  # Initialize the YOLO model instance
-checkpoint = torch.load('best.pt', map_location='cpu')  # Load the checkpoint
-model.load_state_dict(checkpoint['model'])  # Load the model weights from the checkpoint
+
+# Load the entire model (if that's how it was saved)
+model = torch.load('best.pt', map_location='cpu')
 model.eval()  # Set the model to evaluation mode
+
+
+
 
 
 # Alternatively, try using the constructor without specifying 'best.pt'
@@ -93,6 +96,8 @@ def draw_polygons(image, outputs):
 # ...
 
 def non_max_suppression(boxes_df, iou_threshold):
+    # Make sure to define or import the 'nms' function
+    pass
     if boxes_df.empty:
         return boxes_df  # Return empty DataFrame if no boxes are present
 
@@ -106,13 +111,7 @@ def non_max_suppression(boxes_df, iou_threshold):
     # Return DataFrame with boxes that survived NMS
     return boxes_df.iloc[keep]
 
-# ...
 
-
-
-# ...
-
-# ...
 
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
