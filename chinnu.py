@@ -78,27 +78,36 @@ def non_max_suppression(boxes_df, iou_threshold):
 
 # ...
 
-# ...
-
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results_list = model(image_tensor)  # Get model predictions
 
     # Process results
     detections = []
-    for results in results_list:
-        for output in results.xyxy:
-            if output is not None:
-                for detection in output:
-                    x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
-                    detections.append({
-                        'xmin': x1.item(),
-                        'ymin': y1.item(),
-                        'xmax': x2.item(),
-                        'ymax': y2.item(),
-                        'confidence': conf.item(),
-                        'class': int(class_id.item())
-                    })
+    for results in results_list.xyxy:
+        for detection in results:
+            x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
+            detections.append({
+                'xmin': x1.item(),
+                'ymin': y1.item(),
+                'xmax': x2.item(),
+                'ymax': y2.item(),
+                'confidence': conf.item(),
+                'class': int(class_id.item())
+            })
+
+    detections_df = pd.DataFrame(detections)
+
+    # Apply confidence threshold
+    detections_df = detections_df[detections_df['confidence'] > 0.5]
+
+    # Apply non-maximum suppression
+    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
+
+    image_with_boxes = draw_polygons(image, detections_df)
+    return len(detections_df), detections_df, image_with_boxes
+
+# ...
 
     detections_df = pd.DataFrame(detections)
 
