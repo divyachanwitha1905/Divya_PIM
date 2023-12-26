@@ -80,19 +80,36 @@ def non_max_suppression(boxes_df, iou_threshold):
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results = model(image_tensor)  # Get model predictions
-    results = results.xyxy[0]  # Convert to pandas DataFrame
+
+    # Process results
+    detections = []
+    for output in results:
+        if output is not None:
+            for detection in output:
+                x1, y1, x2, y2, obj_conf, class_conf, class = detection.tolist()
+                detections.append({
+                    'xmin': x1,
+                    'ymin': y1,
+                    'xmax': x2,
+                    'ymax': y2,
+                    'confidence': obj_conf * class_conf,  # Multiply object and class confidences
+                    'class': class
+                })
+
+    detections_df = pd.DataFrame(detections)
 
     # Apply confidence threshold
-    results = results[results['confidence'] > 0.5]
+    detections_df = detections_df[detections_df['confidence'] > 0.5]
 
     # Apply non-maximum suppression
-    boxes = torch.tensor(results[['xmin', 'ymin', 'xmax', 'ymax']].values)
-    scores = torch.tensor(results['confidence'].values)
+    boxes = torch.tensor(detections_df[['xmin', 'ymin', 'xmax', 'ymax']].values)
+    scores = torch.tensor(detections_df['confidence'].values)
     keep = torchvision.ops.nms(boxes, scores, iou_threshold=0.5)
-    results = results.iloc[keep]
+    detections_df = detections_df.iloc[keep]
 
-    image_with_boxes = draw_polygons(image, results)
-    return len(results), results, image_with_boxes
+    image_with_boxes = draw_polygons(image, detections_df)
+    return len(detections_df), detections_df, image_with_boxes
+
 
 
 
