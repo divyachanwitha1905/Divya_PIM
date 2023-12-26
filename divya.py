@@ -93,7 +93,7 @@ def predict(image):
                     'xmax': x2,
                     'ymax': y2,
                     'confidence': obj_conf * class_conf,  # Multiply object and class confidences
-                    'class': class
+                    'class': class_id
                 })
 
     detections_df = pd.DataFrame(detections)
