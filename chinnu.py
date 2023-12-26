@@ -78,23 +78,39 @@ def non_max_suppression(boxes_df, iou_threshold):
 
 # ...
 
+# ...
+
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results_list = model(image_tensor)  # Get model predictions
 
     # Process results
     detections = []
-    for results in results_list.xyxy:
-        for detection in results:
-            x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
-            detections.append({
-                'xmin': x1.item(),
-                'ymin': y1.item(),
-                'xmax': x2.item(),
-                'ymax': y2.item(),
-                'confidence': conf.item(),
-                'class': int(class_id.item())
-            })
+    if isinstance(results_list, list):  # Check if results_list is a list
+        for results in results_list:
+            if results is not None and hasattr(results, 'xyxy'):
+                for detection in results.xyxy:
+                    x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
+                    detections.append({
+                        'xmin': x1.item(),
+                        'ymin': y1.item(),
+                        'xmax': x2.item(),
+                        'ymax': y2.item(),
+                        'confidence': conf.item(),
+                        'class': int(class_id.item())
+                    })
+    else:  # Handle the case when results_list is a single Results object
+        if results_list is not None and hasattr(results_list, 'xyxy'):
+            for detection in results_list.xyxy:
+                x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
+                detections.append({
+                    'xmin': x1.item(),
+                    'ymin': y1.item(),
+                    'xmax': x2.item(),
+                    'ymax': y2.item(),
+                    'confidence': conf.item(),
+                    'class': int(class_id.item())
+                })
 
     detections_df = pd.DataFrame(detections)
 
@@ -107,63 +123,7 @@ def predict(image):
     image_with_boxes = draw_polygons(image, detections_df)
     return len(detections_df), detections_df, image_with_boxes
 
-# ...
 
-    detections_df = pd.DataFrame(detections)
-
-    # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
-
-    # Apply non-maximum suppression
-    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
-
-    image_with_boxes = draw_polygons(image, detections_df)
-    return len(detections_df), detections_df, image_with_boxes
-
-# ...
-
-
-    detections_df = pd.DataFrame(detections)
-
-    # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
-
-    # Apply non-maximum suppression
-    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
-
-    image_with_boxes = draw_polygons(image, detections_df)
-    return len(detections_df), detections_df, image_with_boxes
-
-# ...
-
-
-# ...
-
-
-    detections_df = pd.DataFrame(detections)
-
-    # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
-
-    # Apply non-maximum suppression
-    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
-
-    image_with_boxes = draw_polygons(image, detections_df)
-    return len(detections_df), detections_df, image_with_boxes
-
-# ...
-
-
-    detections_df = pd.DataFrame(detections)
-
-    # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
-
-    # Apply non-maximum suppression
-    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
-
-    image_with_boxes = draw_polygons(image, detections_df)
-    return len(detections_df), detections_df, image_with_boxes
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
