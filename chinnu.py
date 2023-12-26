@@ -96,7 +96,7 @@ def predict(image):
                         'ymin': y1.item(),
                         'xmax': x2.item(),
                         'ymax': y2.item(),
-                        'confidence': conf.item(),
+                        'confidence': conf.item() if hasattr(conf, 'item') else conf,  # Handle different confidence representations
                         'class': int(class_id.item())
                     })
     else:  # Handle the case when results_list is a single Results object
@@ -108,20 +108,23 @@ def predict(image):
                     'ymin': y1.item(),
                     'xmax': x2.item(),
                     'ymax': y2.item(),
-                    'confidence': conf.item(),
+                    'confidence': conf.item() if hasattr(conf, 'item') else conf,  # Handle different confidence representations
                     'class': int(class_id.item())
                 })
 
     detections_df = pd.DataFrame(detections)
 
     # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
+    if 'confidence' in detections_df.columns:
+        detections_df = detections_df[detections_df['confidence'] > 0.5]
 
     # Apply non-maximum suppression
     detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
 
     image_with_boxes = draw_polygons(image, detections_df)
     return len(detections_df), detections_df, image_with_boxes
+
+# ...
 
 
 
