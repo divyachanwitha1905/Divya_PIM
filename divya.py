@@ -84,17 +84,17 @@ def predict(image):
     # Process results
     detections = []
     for output in results:
-        if output is not None:
-            for detection in output.boxes.tolist():  # Convert boxes tensor to list
-                x1, y1, x2, y2, obj_conf, class_conf, class_id = detection
-                detections.append({
-                    'xmin': x1,
-                    'ymin': y1,
-                    'xmax': x2,
-                    'ymax': y2,
-                    'confidence': obj_conf * class_conf,  # Multiply object and class confidences
-                    'class': class_id
-                })
+    if output is not None:
+        for detection in output.boxes.xyxy:  # Use the xyxy attribute
+            x1, y1, x2, y2, obj_conf, class_conf, class_id = detection
+            detections.append({
+                'xmin': x1,
+                'ymin': y1,
+                'xmax': x2,
+                'ymax': y2,
+                'confidence': obj_conf * class_conf,  # Multiply object and class confidences
+                'class': class_id
+            })
 
     detections_df = pd.DataFrame(detections)
 
