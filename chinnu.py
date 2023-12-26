@@ -1,15 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Dec 26 15:59:31 2023
 
-@author: DELL
-"""
 
 # -*- coding: utf-8 -*-
 """
 Created on Tue Dec 19 14:19:34 2023
 
 @author: DELL
+
 """
 
 import streamlit as st
@@ -19,15 +15,31 @@ from PIL import Image, ImageDraw
 from ultralytics import YOLO
 import gdown
 import os
-import pandas as pd  # Import pandas for DataFrame operations
-import torchvision.ops as ops
+import pandas as pd
+import requests
+
+# Function to obtain direct download link from Google Drive link
+def get_google_drive_direct_link(gdrive_url):
+    file_id = gdrive_url.split("/")[-2]
+    response = requests.get(f"https://drive.google.com/uc?id={file_id}")
+    return response.url
 
 # Function to download the model file
 def download_file(url, filename):
-    gdown.download(url, filename, quiet=False)
+    try:
+        gdown.download(url, filename, quiet=False)
+        return True
+    except Exception as e:
+        print(f"Error downloading file: {e}")
+        return False
 
-# Replace 'direct_download_link' with your direct download link
-download_file('https://drive.google.com/uc?export=download&id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i', 'best.pt')
+# Obtain direct download link
+gdrive_url = "https://drive.google.com/file/d/1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk/view?usp=sharing"
+direct_download_link = get_google_drive_direct_link(gdrive_url)
+
+# Replace 'direct_download_link' with the obtained direct download link
+download_url = direct_download_link
+download_file(download_url, 'best.pt')
 
 # Check if the model file exists and is a valid PyTorch model file
 if os.path.exists('best.pt'):
@@ -47,6 +59,8 @@ transform = T.Compose([T.Resize(256),
                        T.CenterCrop(224),
                        T.ToTensor(),
                        T.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
+
 
 def draw_polygons(image, outputs):
     draw = ImageDraw.Draw(image)
