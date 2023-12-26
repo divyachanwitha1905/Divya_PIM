@@ -120,10 +120,13 @@ def predict(image):
                 })
 
     detections_df = pd.DataFrame(detections)
+    # Apply confidence threshold
+  # Adjust the threshold as needed
+
 
     # Apply confidence threshold
     if 'confidence' in detections_df.columns:
-        detections_df = detections_df[detections_df['confidence'] > 0.5]
+        detections_df = detections_df[detections_df['confidence'] > 0.1]
 
     # Apply non-maximum suppression
     detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
