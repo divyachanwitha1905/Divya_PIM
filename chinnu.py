@@ -52,8 +52,15 @@ else:
     st.write("Model file not found.")
 
 
+
+import torch
+
 # Load the model
-model = YOLO(weights='best.pt')
+model = YOLO()  # Initialize the YOLO model instance
+checkpoint = torch.load('best.pt', map_location='cpu')  # Load the checkpoint
+model.load_state_dict(checkpoint['model'])  # Load the model weights from the checkpoint
+model.eval()  # Set the model to evaluation mode
+
 
 # Alternatively, try using the constructor without specifying 'best.pt'
 # model = YOLO()
