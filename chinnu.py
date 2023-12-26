@@ -51,8 +51,14 @@ if os.path.exists('best.pt'):
 else:
     st.write("Model file not found.")
 
+
 # Load the model
-model = YOLO('best.pt')
+model = YOLO(weights='best.pt')
+
+# Alternatively, try using the constructor without specifying 'best.pt'
+# model = YOLO()
+# model.load_state_dict(torch.load('best.pt'))
+
 
 # Define the transformation
 transform = T.Compose([T.Resize(256),
