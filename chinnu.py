@@ -54,12 +54,21 @@ else:
 
 
 
-# Load the model
-model = YOLO()  # Initialize the YOLO model instance
 
-# Load the entire model (if that's how it was saved)
-model = torch.load('best.pt', map_location='cpu')
-model.eval()  # Set the model to evaluation mode
+from ultralytics import YOLO
+
+# Initialize the YOLO model instance
+model = YOLO()
+
+# Load the state dict (model parameters) from 'best.pt'
+state_dict = torch.load('best.pt', map_location='cpu')
+
+# Load the state dict into the model
+model.load_state_dict(state_dict)
+
+# Set the model to evaluation mode
+model.eval()
+
 
 
 
