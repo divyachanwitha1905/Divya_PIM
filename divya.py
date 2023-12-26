@@ -77,14 +77,23 @@ def non_max_suppression(boxes_df, iou_threshold):
     # Return DataFrame with boxes that survived NMS
     return boxes_df.iloc[keep]
 
-
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
-    results = model(image_tensor, conf_thres=0.5, iou_thres=0.5)  # Lowered thresholds
-    results = results.pandas().xyxy[0]  # Convert results to pandas DataFrame
-    results = non_max_suppression(results, iou_threshold=0.5)  # Apply NMS
+    results = model(image_tensor)  # Get model predictions
+    results = results.xyxy[0]  # Convert to pandas DataFrame
+
+    # Apply confidence threshold
+    results = results[results['confidence'] > 0.5]
+
+    # Apply non-maximum suppression
+    boxes = torch.tensor(results[['xmin', 'ymin', 'xmax', 'ymax']].values)
+    scores = torch.tensor(results['confidence'].values)
+    keep = torchvision.ops.nms(boxes, scores, iou_threshold=0.5)
+    results = results.iloc[keep]
+
     image_with_boxes = draw_polygons(image, results)
     return len(results), results, image_with_boxes
+
 
 
 # Streamlit code to create the interface
