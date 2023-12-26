@@ -29,6 +29,7 @@ def download_file(url, filename):
 download_file('https://drive.google.com/uc?export=download&id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
 
 
+
 # Check if the model file exists and is a valid PyTorch model file
 if os.path.exists('best.pt'):
     try:
