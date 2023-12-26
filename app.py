@@ -23,10 +23,16 @@ from PIL import Image
 
 # Function to download the model file
 def download_file(url, filename):
-    gdown.download(url, filename, quiet=False)
+    try:
+        gdown.download(url, filename, quiet=False)
+        return True
+    except Exception as e:
+        print(f"Error downloading file: {e}")
+        return False
 
 # Replace 'direct_download_link' with your direct download link
-download_file('https://drive.google.com/uc?export=download&id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i', 'best.pt')
+download_url = 'https://drive.google.com/uc?export=download&id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i'
+download_file(download_url, 'best.pt')
 
 
 
