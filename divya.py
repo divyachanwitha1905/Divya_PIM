@@ -109,20 +109,7 @@ def predict(image):
 
     image_with_boxes = draw_polygons(image, detections_df)
     return len(detections_df), detections_df, image_with_boxes
-DataFrame(detections)
 
-    
-    # Apply confidence threshold
-    detections_df = detections_df[detections_df['confidence'] > 0.5]
-
-    # Apply non-maximum suppression
-    boxes = torch.tensor(detections_df[['xmin', 'ymin', 'xmax', 'ymax']].values)
-    scores = torch.tensor(detections_df['confidence'].values)
-    keep = torchvision.ops.nms(boxes, scores, iou_threshold=0.5)
-    detections_df = detections_df.iloc[keep]
-
-    image_with_boxes = draw_polygons(image, detections_df)
-    return len(detections_df), detections_df, image_with_boxes
 
 
 
