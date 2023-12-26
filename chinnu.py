@@ -78,16 +78,18 @@ def non_max_suppression(boxes_df, iou_threshold):
 
 # ...
 
+# ...
+
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results = model(image_tensor)  # Get model predictions
 
     # Process results
     detections = []
-    for output in results:  # Iterate over each output (each class prediction)
+    for output in results.xyxy:  # Iterate over each detection
         if output is not None:
-            for detection in output.xyxy:  # Iterate over each detection
-                x1, y1, x2, y2, conf, _, class_id = detection
+            for detection in output:  # Iterate over each detection
+                x1, y1, x2, y2, conf, class_id = detection[0:6]  # Extract values from the detection tuple
                 detections.append({
                     'xmin': x1.item(),
                     'ymin': y1.item(),
@@ -107,6 +109,9 @@ def predict(image):
 
     image_with_boxes = draw_polygons(image, detections_df)
     return len(detections_df), detections_df, image_with_boxes
+
+# ...
+
 
 # ...
 
