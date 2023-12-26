@@ -90,6 +90,8 @@ def non_max_suppression(boxes_df, iou_threshold):
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
     results_list = model(image_tensor)  # Get model predictions
+    
+    print(results)
 
     # Process results
     detections = []
@@ -129,7 +131,9 @@ def predict(image):
         detections_df = detections_df[detections_df['confidence'] > 0.1]
 
     # Apply non-maximum suppression
-    detections_df = non_max_suppression(detections_df, iou_threshold=0.5)
+    # Apply non-maximum suppression
+    detections_df = non_max_suppression(detections_df, iou_threshold=0.3)  # Adjust the threshold as needed
+
 
     image_with_boxes = draw_polygons(image, detections_df)
     return len(detections_df), detections_df, image_with_boxes
