@@ -84,7 +84,7 @@ def predict(image):
     # Process results
     detections = []
     for output in results:
-    if output is not None:
+      if output is not None:
         for detection in output.boxes.xyxy:  # Use the xyxy attribute
             x1, y1, x2, y2, obj_conf, class_conf, class_id = detection
             detections.append({
