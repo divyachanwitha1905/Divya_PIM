@@ -16,19 +16,19 @@ import torch
 from PIL import Image, ImageDraw
 import torchvision.transforms as T
 from ultralytics import YOLO
+import gdown
 import os
 import numpy as np
 from PIL import Image
-import requests
 
 # Function to download the model file
 def download_file(url, filename):
-    response = requests.get(url)
-    with open(filename, 'wb') as f:
-        f.write(response.content)
+    gdown.download(url, filename, quiet=False)
 
 # Replace 'direct_download_link' with your direct download link
-download_file('https://drive.google.com/uc?export=download&id=1J753l-T63J5oV-9rK6oJiO_F0RWXXZQk', 'best.pt')
+download_file('https://drive.google.com/uc?export=download&id=1rINJnXcNoDtRa8oLdEffy-YsfLOD_58i', 'best.pt')
+
+
 
 # Check if the model file exists and is a valid PyTorch model file
 if os.path.exists('best.pt'):
@@ -63,11 +63,29 @@ def draw_polygons(image, outputs):
             draw.polygon(polygon, outline="red")
     return image
 
+
+from torchvision.ops import nms
+
+def non_max_suppression(boxes_df, iou_threshold):
+    # Convert DataFrame to tensor
+    boxes = torch.tensor(boxes_df[['xmin', 'ymin', 'xmax', 'ymax']].values)
+    scores = torch.tensor(boxes_df['confidence'].values)
+
+    # Apply NMS
+    keep = nms(boxes, scores, iou_threshold)
+
+    # Return DataFrame with boxes that survived NMS
+    return boxes_df.iloc[keep]
+
+
 def predict(image):
     image_tensor = transform(image).unsqueeze(0)
-    results = model(image_tensor)
+    results = model(image_tensor, conf_thres=0.5, iou_thres=0.5)  # Lowered thresholds
+    results = results.pandas().xyxy[0]  # Convert results to pandas DataFrame
+    results = non_max_suppression(results, iou_threshold=0.5)  # Apply NMS
     image_with_boxes = draw_polygons(image, results)
     return len(results), results, image_with_boxes
+
 
 # Streamlit code to create the interface
 st.title("Steel Pipe Detector")
