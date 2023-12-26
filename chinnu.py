@@ -63,16 +63,23 @@ def draw_polygons(image, outputs):
             draw.polygon(polygon, outline="red")
     return image
 
+# ...
+
 def non_max_suppression(boxes_df, iou_threshold):
+    if boxes_df.empty:
+        return boxes_df  # Return empty DataFrame if no boxes are present
+
     # Convert DataFrame to tensor
     boxes = torch.tensor(boxes_df[['xmin', 'ymin', 'xmax', 'ymax']].values)
     scores = torch.tensor(boxes_df['confidence'].values)
 
     # Apply NMS
-    keep = ops.nms(boxes, scores, iou_threshold)
+    keep = nms(boxes, scores, iou_threshold)
 
     # Return DataFrame with boxes that survived NMS
     return boxes_df.iloc[keep]
+
+# ...
 
 
 
